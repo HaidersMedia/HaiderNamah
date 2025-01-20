@@ -1,0 +1,293 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const allTimelineEvents = [
+  {
+    year: '1992',
+    title: 'The Beginning',
+    color: 'yellow',
+    icon: '💡',
+    thumbnail: 'https://images.unsplash.com/photo-1582727657635-c771002bdada?auto=format&fit=crop&q=80',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  },
+  {
+    year: '1999',
+    title: 'Spiritual Awakening',
+    color: 'orange',
+    icon: '💭',
+    thumbnail: 'https://images.unsplash.com/photo-1493612276216-ee3925520721?auto=format&fit=crop&q=80',
+    description: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+  },
+  {
+    year: '2003',
+    title: 'Global Outreach',
+    color: 'red',
+    icon: '👤',
+    thumbnail: 'https://images.unsplash.com/photo-1470549638415-0a0755be0619?auto=format&fit=crop&q=80',
+    description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.',
+  },
+  {
+    year: '2007',
+    title: 'Digital Transformation',
+    color: 'pink',
+    icon: '📊',
+    thumbnail: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80',
+    description: 'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.',
+  },
+  {
+    year: '2014',
+    title: 'Technological Innovation',
+    color: 'blue',
+    icon: '⚙️',
+    thumbnail: 'https://images.unsplash.com/photo-1518818419601-72c8673f5852?auto=format&fit=crop&q=80',
+    description: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis.',
+  },
+  {
+    year: '2019',
+    title: 'Global Expansion',
+    color: 'green',
+    icon: '🌍',
+    thumbnail: 'https://images.unsplash.com/photo-1529400971008-f566de0e6dfc?auto=format&fit=crop&q=80',
+    description: 'Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae.',
+  },
+  {
+    year: '2020',
+    title: 'Digital Revolution',
+    color: 'purple',
+    icon: '💻',
+    thumbnail: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80',
+    description: 'Embracing digital transformation and remote work culture during global changes.',
+  },
+  {
+    year: '2021',
+    title: 'Sustainable Future',
+    color: 'teal',
+    icon: '🌱',
+    thumbnail: 'https://images.unsplash.com/photo-1518818419601-72c8673f5852?auto=format&fit=crop&q=80',
+    description: 'Implementing eco-friendly initiatives and sustainable practices across operations.',
+  },
+  {
+    year: '2022',
+    title: 'Community Building',
+    color: 'indigo',
+    icon: '🤝',
+    thumbnail: 'https://images.unsplash.com/photo-1529400971008-f566de0e6dfc?auto=format&fit=crop&q=80',
+    description: 'Strengthening community bonds and fostering collaborative growth.',
+  },
+  {
+    year: '2023',
+    title: 'Innovation Hub',
+    color: 'rose',
+    icon: '🚀',
+    thumbnail: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80',
+    description: 'Launching innovation hubs and research centers worldwide.',
+  },
+  {
+    year: '2024',
+    title: 'Future Vision',
+    color: 'cyan',
+    icon: '🔮',
+    thumbnail: 'https://images.unsplash.com/photo-1518818419601-72c8673f5852?auto=format&fit=crop&q=80',
+    description: 'Setting new milestones and expanding horizons for the future.',
+  }
+];
+
+const ITEMS_PER_PAGE = 6;
+const initialEvents = allTimelineEvents.slice(0, ITEMS_PER_PAGE);
+---
+
+<Layout title="Introduction - Our Journey">
+  <main class="relative min-h-screen">
+    <!-- World Map Background -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none">
+      <div class="w-full h-full bg-[url('https://raw.githubusercontent.com/your-username/your-repo/main/world-map-dots.png')] bg-no-repeat bg-center bg-contain"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 py-16 relative">
+      <h1 class="text-4xl font-bold text-center text-gray-900 dark:text-white mb-16">
+        Our Journey Through Time
+      </h1>
+
+      <!-- Timeline Container -->
+      <div class="relative">
+        <!-- Center Line -->
+        <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+
+        <!-- Timeline Events -->
+        <div class="timeline-events space-y-16">
+          {initialEvents.map((event, index) => (
+            <div class={`timeline-event relative flex ${index % 2 === 0 ? '' : 'flex-row-reverse'}`}>
+              <!-- Date and Icon -->
+              <div class="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                <div class="flex flex-col items-center">
+                  <div class="relative">
+                    <span class="text-3xl mb-2 inline-block animate-bounce-gentle hover:scale-125 transition-transform cursor-pointer">{event.icon}</span>
+                    <!-- Animated date pointer line -->
+                    <div class={`absolute w-24 h-0.5 bg-gradient-to-r from-${event.color}-500 to-${event.color}-300 
+                      ${index % 2 === 0 ? 'left-full' : 'right-full'} top-1/2 transform -translate-y-1/2
+                      animate-grow-line origin-${index % 2 === 0 ? 'left' : 'right'}`}>
+                      <div class={`absolute ${index % 2 === 0 ? 'right-0' : 'left-0'} -top-1 w-2 h-2 rounded-full bg-${event.color}-500 animate-pulse`}></div>
+                    </div>
+                  </div>
+                  <div class="bg-white dark:bg-gray-800 rounded-full shadow-lg px-4 py-1 border-2 border-gray-200 dark:border-gray-700 hover:scale-110 transition-transform">
+                    <span class="text-lg font-bold text-gray-900 dark:text-white">{event.year}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Content Card -->
+              <div class={`w-5/12 ${index % 2 === 0 ? 'pr-12' : 'pl-12'}`}>
+                <div class="group cursor-pointer">
+                  <div class={`relative bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl`}>
+                    <!-- Origami Arrow -->
+                    <div class={`absolute top-1/2 ${index % 2 === 0 ? '-right-8' : '-left-8'} transform -translate-y-1/2`}>
+                      <div class={`w-8 h-8 transform ${index % 2 === 0 ? 'rotate-45' : '-rotate-45'} bg-${event.color}-500`}></div>
+                    </div>
+
+                    <img
+                      src={event.thumbnail}
+                      alt={event.title}
+                      class="w-full h-48 object-cover"
+                    />
+                    <div class="p-6">
+                      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                        {event.title}
+                      </h3>
+                      <p class="text-gray-600 dark:text-gray-300 timeline-description hidden">
+                        {event.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          <!-- Hidden Events (Will be shown when Load More is clicked) -->
+          {allTimelineEvents.slice(ITEMS_PER_PAGE).map((event, index) => (
+            <div class={`timeline-event relative flex ${(index + ITEMS_PER_PAGE) % 2 === 0 ? '' : 'flex-row-reverse'} hidden`}>
+              <!-- Date and Icon -->
+              <div class="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                <div class="flex flex-col items-center">
+                  <div class="relative">
+                    <span class="text-3xl mb-2 inline-block animate-bounce-gentle hover:scale-125 transition-transform cursor-pointer">{event.icon}</span>
+                    <!-- Animated date pointer line -->
+                    <div class={`absolute w-24 h-0.5 bg-gradient-to-r from-${event.color}-500 to-${event.color}-300 
+                      ${(index + ITEMS_PER_PAGE) % 2 === 0 ? 'left-full' : 'right-full'} top-1/2 transform -translate-y-1/2
+                      animate-grow-line origin-${(index + ITEMS_PER_PAGE) % 2 === 0 ? 'left' : 'right'}`}>
+                      <div class={`absolute ${(index + ITEMS_PER_PAGE) % 2 === 0 ? 'right-0' : 'left-0'} -top-1 w-2 h-2 rounded-full bg-${event.color}-500 animate-pulse`}></div>
+                    </div>
+                  </div>
+                  <div class="bg-white dark:bg-gray-800 rounded-full shadow-lg px-4 py-1 border-2 border-gray-200 dark:border-gray-700 hover:scale-110 transition-transform">
+                    <span class="text-lg font-bold text-gray-900 dark:text-white">{event.year}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Content Card -->
+              <div class={`w-5/12 ${(index + ITEMS_PER_PAGE) % 2 === 0 ? 'pr-12' : 'pl-12'}`}>
+                <div class="group cursor-pointer">
+                  <div class={`relative bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl`}>
+                    <!-- Origami Arrow -->
+                    <div class={`absolute top-1/2 ${(index + ITEMS_PER_PAGE) % 2 === 0 ? '-right-8' : '-left-8'} transform -translate-y-1/2`}>
+                      <div class={`w-8 h-8 transform ${(index + ITEMS_PER_PAGE) % 2 === 0 ? 'rotate-45' : '-rotate-45'} bg-${event.color}-500`}></div>
+                    </div>
+
+                    <img
+                      src={event.thumbnail}
+                      alt={event.title}
+                      class="w-full h-48 object-cover"
+                    />
+                    <div class="p-6">
+                      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                        {event.title}
+                      </h3>
+                      <p class="text-gray-600 dark:text-gray-300 timeline-description hidden">
+                        {event.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Load More Button -->
+        <div class="flex justify-center mt-16">
+          <button
+            id="load-more-btn"
+            class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 animate-pulse"
+          >
+            Load More
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .timeline-card {
+    width: 100%;
+    max-width: 32rem;
+  }
+  
+  @media (max-width: 768px) {
+    .timeline-card {
+      max-width: 100%;
+    }
+  }
+</style>
+
+<script>
+  let currentlyVisible = 6;
+  const itemsPerLoad = 3;
+  
+  function loadMore() {
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    const timelineContainer = document.querySelector('.timeline-events');
+    const hiddenEvents = document.querySelectorAll('.timeline-event.hidden');
+    
+    // Show next set of items
+    for (let i = 0; i < itemsPerLoad && i < hiddenEvents.length; i++) {
+      const event = hiddenEvents[i] as HTMLElement;
+      event.classList.remove('hidden');
+      event.classList.add('animate-fade-in-up');
+    }
+    
+    // Hide button if no more items to show
+    if (hiddenEvents.length <= itemsPerLoad) {
+      loadMoreBtn?.classList.add('hidden');
+    }
+    
+    // Smooth scroll to the newly loaded items
+    const lastVisible = Array.from(hiddenEvents).slice(0, itemsPerLoad).pop();
+    if (lastVisible) {
+      setTimeout(() => {
+        lastVisible.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  }
+
+  // Add click event listener to the load more button
+  document.getElementById('load-more-btn')?.addEventListener('click', loadMore);
+
+  // Card description toggle
+  document.querySelectorAll('.group').forEach(card => {
+    card.addEventListener('click', () => {
+      const description = card.querySelector('.timeline-description');
+      if (description) {
+        description.classList.toggle('hidden');
+        
+        // Smooth height transition
+        const content = card.querySelector('.bg-white, .dark\\:bg-gray-800') as HTMLElement;
+        if (content) {
+          content.style.height = description.classList.contains('hidden') 
+            ? 'auto'
+            : `${content.scrollHeight}px`;
+        }
+      }
+    });
+  });
+</script>

@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import { getChannelVideos, CHANNEL_ID, Video } from '../utils/youtube';
+
+let videos: Video[] = [];
+let error: string | null = null;
+
+try {
+  videos = await getChannelVideos(CHANNEL_ID);
+} catch (err: unknown) {
+  if (err instanceof Error) {
+    error = err.message;
+  } else {
+    error = 'Failed to load videos';
+  }
+}
+
+const pageTitle = 'Khitabat - Spiritual Discourses';
+---
+
+<Layout title={pageTitle}>
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-center mb-8">Spiritual Discourses</h1>
+    
+    {error ? (
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <strong class="font-bold">Error:</strong>
+        <span class="block sm:inline"> {error}</span>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {videos.map((video) => (
+          <Card video={video} />
+        ))}
+      </div>
+    )}
+  </main>
+</Layout>
