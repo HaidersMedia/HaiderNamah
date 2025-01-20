@@ -1,13 +1,20 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
-import { getChannelVideos, CHANNEL_ID, Video } from '../utils/youtube';
+import { getChannelVideos } from '../utils/youtube';
+import type { Video } from '../utils/youtube';
+
+const API_KEY = 'AIzaSyAEaF-BVySVMtmpAnysmtG8eqZArjdLor4';
+const channelId = 'UCBmEIVks75eLzhbgrdbZ1Ng';
 
 let videos: Video[] = [];
+let nextPageToken: string | null = null;
 let error: string | null = null;
 
 try {
-  videos = await getChannelVideos(CHANNEL_ID);
+  const response = await getChannelVideos(API_KEY, channelId);
+  videos = response.videos;
+  nextPageToken = response.nextPageToken;
 } catch (err: unknown) {
   if (err instanceof Error) {
     error = err.message;
@@ -23,17 +30,88 @@ const pageTitle = 'Khitabat - Spiritual Discourses';
   <main class="container mx-auto px-4 py-8">
     <h1 class="text-4xl font-bold text-center mb-8">Spiritual Discourses</h1>
     
-    {error ? (
-      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-        <strong class="font-bold">Error:</strong>
-        <span class="block sm:inline"> {error}</span>
-      </div>
-    ) : (
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {videos.map((video) => (
-          <Card video={video} />
-        ))}
-      </div>
-    )}
+      {error ? (
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <strong class="font-bold">Error:</strong>
+          <span class="block sm:inline"> {error}</span>
+        </div>
+      ) : (
+        <>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+            {videos.map((video) => (
+                <a 
+                  href={`https://www.youtube.com/watch?v=${video.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="block"
+                >
+                  <Card video={video} />
+                </a>
+            ))}
+          </div>
+          
+          {nextPageToken && (
+            <div class="flex justify-center mt-8">
+              <button
+                class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105"
+                onclick="window.loadMoreVideos()"
+              >
+                Load More
+              </button>
+            </div>
+          )}
+        </>
+      )}
   </main>
 </Layout>
+
+<script is:inline>
+  // Add client-side interactivity
+  window.loadMoreVideos = async function() {
+    try {
+      const response = await fetch('/api/load-more-videos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+          body: JSON.stringify({
+            apiKey: API_KEY,
+            channelId: channelId,
+            nextPageToken: nextPageToken
+          })
+      });
+      
+      if (!response.ok) throw new Error('Failed to load more videos');
+      
+      const data = await response.json();
+      if (data.error) throw new Error(data.error);
+      
+      // Update UI with new videos
+      const videoGrid = document.querySelector('.grid');
+      if (videoGrid) {
+        data.videos.forEach(video => {
+          const videoElement = document.createElement('div');
+          videoElement.innerHTML = `
+            <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank" rel="noopener noreferrer" class="block">
+              ${video.snippet.title}
+            </a>
+          `;
+          videoGrid.appendChild(videoElement);
+        });
+      }
+      
+      // Update nextPageToken
+      nextPageToken = data.nextPageToken;
+      
+      // Smooth scroll to top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+      
+    } catch (error) {
+      console.error('Error loading more videos:', error);
+      alert('Failed to load more videos. Please try again.');
+    }
+  };
+</script>
