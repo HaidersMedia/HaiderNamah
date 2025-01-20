@@ -1,14 +1,65 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
+function setupFormSwitching() {
+  // Form switching logic
+  const signinForm = document.getElementById('signin-form') as HTMLFormElement | null;
+  const signupForm = document.getElementById('signup-form') as HTMLFormElement | null;
+  const showSignupBtn = document.getElementById('show-signup') as HTMLButtonElement | null;
+  const showSigninBtn = document.getElementById('show-signin') as HTMLButtonElement | null;
+  const pageTitle = document.querySelector('h2') as HTMLHeadingElement | null;
+  const formSwitchText = document.getElementById('form-switch-text') as HTMLParagraphElement | null;
+
+  // Function to switch to sign up form
+  const switchToSignUp = (e: Event) => {
+    e.preventDefault();
+    signupForm?.classList.remove('hidden');
+    signinForm?.classList.add('hidden');
+    if (pageTitle) pageTitle.textContent = 'Sign up';
+    if (formSwitchText) {
+      formSwitchText.innerHTML = 'Already have an account? <a href="#" class="text-white border-b-2 border-yellow-400 no-underline" id="show-signin">Sign in</a>';
+      setTimeout(() => {
+        document.getElementById('show-signin')?.addEventListener('click', switchToSignIn);
+      }, 0);
+    }
+  };
+
+  // Function to switch to sign in form
+  const switchToSignIn = (e: Event) => {
+    e.preventDefault();
+    signinForm?.classList.remove('hidden');
+    signupForm?.classList.add('hidden');
+    if (pageTitle) pageTitle.textContent = 'Sign in';
+    if (formSwitchText) {
+      formSwitchText.innerHTML = 'Don\'t have an account? <a href="#" class="text-white border-b-2 border-yellow-400 no-underline" id="show-signup">Sign up</a>';
+      setTimeout(() => {
+        document.getElementById('show-signup')?.addEventListener('click', switchToSignUp);
+      }, 0);
+    }
+  };
+
+  // Add initial event listeners for form switching
+  if (showSignupBtn) {
+    showSignupBtn.addEventListener('click', switchToSignUp);
+  } else {
+    setTimeout(() => {
+      document.getElementById('show-signup')?.addEventListener('click', switchToSignUp);
+    }, 0);
+  }
+}
+
 export async function setupLoginForm(supabase: SupabaseClient) {
-  // Get error div reference first
+  // Set up form switching immediately
+  setupFormSwitching();
+
+  // Get error div reference
   const errorDiv = document.getElementById('error-message') as HTMLDivElement;
   
-  // Check for email confirmation
-  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-  
-  // Handle returning confirmed user
-  if (session?.user && !sessionError) {
+  try {
+    // Check for email confirmation
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    
+    // Handle returning confirmed user
+    if (session?.user && !sessionError) {
     const pendingUserData = localStorage.getItem('pendingUserData');
     if (pendingUserData) {
       try {
@@ -38,6 +89,10 @@ export async function setupLoginForm(supabase: SupabaseClient) {
         console.error('Error creating profile:', error);
       }
     }
+  }
+
+  } catch (error) {
+    console.error('Error checking session:', error);
   }
 
   // Check URL parameters for various flows
@@ -154,12 +209,22 @@ export async function setupLoginForm(supabase: SupabaseClient) {
     if (pageTitle) pageTitle.textContent = 'Sign in';
     if (formSwitchText) {
       formSwitchText.innerHTML = 'Don\'t have an account? <a href="#" class="text-white border-b-2 border-yellow-400 no-underline" id="show-signup">Sign up</a>';
-      document.getElementById('show-signup')?.addEventListener('click', switchToSignUp);
+      // Add event listener after a short delay to ensure the element exists
+      setTimeout(() => {
+        document.getElementById('show-signup')?.addEventListener('click', switchToSignUp);
+      }, 0);
     }
   };
 
-  // Add initial event listeners
-  showSignupBtn?.addEventListener('click', switchToSignUp);
+  // Add initial event listeners for form switching
+  if (showSignupBtn) {
+    showSignupBtn.addEventListener('click', switchToSignUp);
+  } else {
+    // If the button doesn't exist yet, wait for it and add the listener
+    setTimeout(() => {
+      document.getElementById('show-signup')?.addEventListener('click', switchToSignUp);
+    }, 0);
+  }
 
   // Setup forgot password functionality
   const forgotPasswordBtn = document.getElementById('forgot-password') as HTMLButtonElement;
@@ -288,7 +353,6 @@ export async function setupLoginForm(supabase: SupabaseClient) {
         email: signupEmailInput.value,
         password: signupPasswordInput.value,
         options: {
-          emailRedirectTo: `${window.location.origin}/login`,
           data: {
             first_name: firstName,
             last_name: lastName,

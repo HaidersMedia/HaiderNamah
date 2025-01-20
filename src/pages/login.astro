@@ -1,7 +1,8 @@
 ---
-// Server-side code here
+import Layout from '../layouts/Layout.astro';
 ---
 
+<Layout title="Sign In - Haider Namah">
 <div class="min-h-screen flex items-center justify-center bg-black py-12 px-4 sm:px-6 lg:px-8">
   <div class="flex gap-8 items-center max-w-5xl w-full">
     <div class="flex-1 hidden lg:block">
@@ -16,7 +17,7 @@
         Sign in
       </h2>
       <p id="form-switch-text" class="text-gray-400">
-        Don't have an account? <a href="#" class="text-white border-b-2 border-yellow-400 no-underline" id="show-signup">Sign up</a>
+        Don't have an account? <button type="button" class="text-white border-b-2 border-yellow-400 hover:text-yellow-400 transition-colors ml-1 cursor-pointer bg-transparent border-0 p-0" id="show-signup">Sign up</button>
       </p>
     </div>
 
@@ -172,6 +173,7 @@
     </div>
   </div>
 </div>
+</Layout>
 
 <script>
   // @ts-nocheck
